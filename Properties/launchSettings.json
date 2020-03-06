@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Dev_Web_Trabalho_Final_BackEnd": {
+    "DevWebBackEnd": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",

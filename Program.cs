@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Dev_Web_Trabalho_Final_BackEnd
+namespace DevWebBackEnd
 {
     public class Program
     {

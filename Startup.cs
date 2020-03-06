@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Dev_Web_Trabalho_Final_BackEnd
+namespace DevWebBackEnd
 {
     public class Startup
     {
