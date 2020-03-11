@@ -44,7 +44,7 @@ namespace DevWebBackEnd.Controllers
     {
         _context.Receitas.Add(item);
         await _context.SaveChangesAsync();
-
+        
         return CreatedAtAction(nameof(GetReceitas), new { id = item.Id }, item);
     }
 
