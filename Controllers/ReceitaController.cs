@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -19,23 +20,68 @@ namespace DevWebBackEnd.Controllers
 
     // GET: 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Receita>>> GetReceitas()
+    public async Task<ActionResult<IEnumerable<Object>>> GetReceitas()
     {
-        return await _context.Receitas.ToListAsync();
+        var receitaList = await _context.Receitas.ToListAsync();
+        Object[] newReceitaList = new Object[receitaList.Count];
+        Usuario usuario = new Usuario();
+        int i = 0;
+        foreach(var receita in receitaList){
+            // Receita newReceita = new Receita();
+            // usuario  = await _context.Usuarios.FindAsync(receita.UsuarioId);
+            var json = new {
+                Id = receita.Id,
+                Nome = receita.Nome,
+                Imagem = receita.Imagem,
+                Rendimento = receita.Rendimento,
+                Tempo = receita.Tempo,
+                Pontuacao = receita.Pontuacao,
+                UsuarioId = receita.UsuarioId,
+            };
+            newReceitaList[i] = json;
+            i++;
+        }
+        return newReceitaList;
     }
 
     // GET with id: 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Receita>> GetReceita(int id)
+    public async Task<ActionResult<Object>> GetReceita(int id)
     {
+        var igredienteList = _context.Igredientes
+            .Where(o => o.ReceitaId == id) 
+            .Distinct() 
+            .ToList();
+
         var receita = await _context.Receitas.FindAsync(id);
 
-        if (receita == null)
+        if (receita == null || igredienteList == null)
         {
             return NotFound();
         }
+        Object[] newIgredienteList = new Object[igredienteList.Count];
+        int i = 0;
+        foreach(var igrediente in igredienteList){
+            var json = new {
+                Id = igrediente.Id,
+                Label = igrediente.Label,
+            };
+            newIgredienteList[i] = json;
+            i++;
+        }
+        var newReceita = new {
+            Id = receita.Id,
+            Nome = receita.Nome,
+            Imagem = receita.Imagem,
+            Rendimento = receita.Rendimento,
+            Tempo = receita.Tempo,
+            Preparo = receita.Preparo,
+            Pontuacao = receita.Pontuacao,
+            Igredientes = newIgredienteList,
+            UsuarioId = receita.UsuarioId,
+        };
 
-        return receita;
+        return newReceita;
     }
 
     // POST: 
@@ -43,9 +89,21 @@ namespace DevWebBackEnd.Controllers
     public async Task<ActionResult<Receita>> PostReceita(Receita item)
     {
         _context.Receitas.Add(item);
+        foreach(var igrediente in item.Igredientes){
+            _context.Igredientes.Add(igrediente);
+        }
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetReceitas), new { id = item.Id }, item);
+        var json = new{
+            Id = item.Id,
+            Nome = item.Nome,
+            Imagem = item.Imagem,
+            Rendimento = item.Rendimento,
+            Tempo = item.Tempo,
+            Preparo = item.Preparo,
+            Pontuacao = item.Pontuacao,
+            UsuarioId = item.UsuarioId,
+        };
+        return CreatedAtAction(nameof(GetReceitas), new { id = item.Id }, json);
     }
 
     // PUT: 
@@ -56,7 +114,9 @@ namespace DevWebBackEnd.Controllers
         {
             return BadRequest();
         }
-
+        foreach(var igrediente in item.Igredientes){
+            _context.Igredientes.Update(igrediente);
+        }
         _context.Entry(item).State = EntityState.Modified;
         await _context.SaveChangesAsync();
 
@@ -73,7 +133,9 @@ namespace DevWebBackEnd.Controllers
         {
             return NotFound();
         }
-
+        foreach(var igrediente in receita.Igredientes){
+            _context.Igredientes.Remove(igrediente);
+        }
         _context.Receitas.Remove(receita);
         await _context.SaveChangesAsync();
 

@@ -13,6 +13,6 @@ namespace DevWebBackEnd.Models{
         public List<Igrediente> Igredientes{get;set;}
         [ForeignKey("Usuario")]
         public int UsuarioId{get;set;}
-        public Usuario Usuario{get;set;}
+        public virtual Usuario Usuario{get;set;}
     }
 }
