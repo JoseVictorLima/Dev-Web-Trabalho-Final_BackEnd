@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -67,13 +68,27 @@ namespace DevWebBackEnd.Controllers
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUsuario(int id)
     {
+        var receitaList = _context.Receitas
+            .Where(o => o.UsuarioId == id) 
+            .Distinct() 
+            .ToList();
+
         var usuario = await _context.Usuarios.FindAsync(id);
 
         if (usuario == null)
         {
             return NotFound();
         }
-
+        foreach(var receita in receitaList){
+            var igredienteList = _context.Igredientes
+                .Where(o => o.ReceitaId == receita.Id) 
+                .Distinct() 
+                .ToList();
+            foreach(var igrediente in igredienteList){
+                _context.Igredientes.Remove(igrediente);
+            }
+            _context.Receitas.Remove(receita);
+        }
         _context.Usuarios.Remove(usuario);
         await _context.SaveChangesAsync();
 
