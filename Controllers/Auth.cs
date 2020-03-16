@@ -42,6 +42,7 @@ namespace DevWebBackEnd.Controllers
             };
         }else{
             return new {
+                Usuario = usuario,
                 Token = "1000",
                 Response = "Authentication Success"
             };

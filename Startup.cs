@@ -34,8 +34,13 @@ namespace DevWebBackEnd
                 options.AddPolicy(MyAllowSpecificOrigins,
                 builder =>
                 {
-                    builder.WithOrigins("http://example.com",
-                                        "http://www.contoso.com");
+                    builder.WithOrigins(
+                                        "http://localhost:8080",
+                                        "http://localhost:8081",
+                                        "http://localhost:8082"
+                                        )
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
                 });
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

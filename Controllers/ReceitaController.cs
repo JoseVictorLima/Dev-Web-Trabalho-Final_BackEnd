@@ -65,6 +65,7 @@ namespace DevWebBackEnd.Controllers
             var json = new {
                 Id = igrediente.Id,
                 Label = igrediente.Label,
+                Value = igrediente.Value,
             };
             newIgredienteList[i] = json;
             i++;
