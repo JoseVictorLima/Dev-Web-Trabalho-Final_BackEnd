@@ -102,6 +102,7 @@ namespace DevWebBackEnd.Controllers
             Tempo = item.Tempo,
             Preparo = item.Preparo,
             Pontuacao = item.Pontuacao,
+            DataCriacao = DateTime.Now,
             UsuarioId = item.UsuarioId,
         };
         return CreatedAtAction(nameof(GetReceitas), new { id = item.Id }, json);
