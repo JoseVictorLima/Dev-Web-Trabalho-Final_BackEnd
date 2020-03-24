@@ -89,9 +89,12 @@ namespace DevWebBackEnd.Controllers
     [HttpPost]
     public async Task<ActionResult<Receita>> PostReceita(Receita item)
     {
+        item.DataCriacao = DateTime.Now;
         _context.Receitas.Add(item);
-        foreach(var igrediente in item.Igredientes){
-            _context.Igredientes.Add(igrediente);
+        if(item.Igredientes.Count>0){
+            foreach(var igrediente in item.Igredientes){
+                _context.Igredientes.Add(igrediente);
+            }
         }
         await _context.SaveChangesAsync();
         var json = new{
@@ -102,7 +105,7 @@ namespace DevWebBackEnd.Controllers
             Tempo = item.Tempo,
             Preparo = item.Preparo,
             Pontuacao = item.Pontuacao,
-            DataCriacao = DateTime.Now,
+            DataCriacao = item.DataCriacao,
             UsuarioId = item.UsuarioId,
         };
         return CreatedAtAction(nameof(GetReceitas), new { id = item.Id }, json);
@@ -135,8 +138,14 @@ namespace DevWebBackEnd.Controllers
         {
             return NotFound();
         }
-        foreach(var igrediente in receita.Igredientes){
-            _context.Igredientes.Remove(igrediente);
+        var igredienteList = _context.Igredientes
+            .Where(o => o.ReceitaId == id) 
+            .Distinct() 
+            .ToList();
+        if(igredienteList.Count>0){
+            foreach(var igrediente in igredienteList){
+                _context.Igredientes.Remove(igrediente);
+            }
         }
         _context.Receitas.Remove(receita);
         await _context.SaveChangesAsync();
