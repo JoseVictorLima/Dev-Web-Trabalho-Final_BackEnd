@@ -3,6 +3,7 @@ namespace DevWebBackEnd.Models{
 
         public int Id{get;set;}
         public string Label{get;set;}
+        public string Unidade{get;set;}
         public string Value{get;set;}
         public int? ReceitaId{get;set;}
         public virtual Receita Receita{get;set;}

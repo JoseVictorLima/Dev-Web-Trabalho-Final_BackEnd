@@ -64,6 +64,7 @@ namespace DevWebBackEnd.Controllers
         foreach(var igrediente in igredienteList){
             var json = new {
                 Id = igrediente.Id,
+                Unidade = igrediente.Unidade,
                 Label = igrediente.Label,
                 Value = igrediente.Value,
             };
@@ -72,6 +73,7 @@ namespace DevWebBackEnd.Controllers
         }
         var newReceita = new {
             Id = receita.Id,
+            DataCriacao = receita.DataCriacao,
             Nome = receita.Nome,
             Imagem = receita.Imagem,
             Rendimento = receita.Rendimento,
@@ -119,9 +121,12 @@ namespace DevWebBackEnd.Controllers
         {
             return BadRequest();
         }
-        foreach(var igrediente in item.Igredientes){
-            _context.Igredientes.Update(igrediente);
+        if(item.Igredientes.Count>0){
+            foreach(var igrediente in item.Igredientes){
+                _context.Igredientes.Update(igrediente);
+            }
         }
+        _context.Receitas.Update(item);
         _context.Entry(item).State = EntityState.Modified;
         await _context.SaveChangesAsync();
 
