@@ -6,5 +6,7 @@ namespace DevWebBackEnd.Models{
         public string Imagem{get;set;}
         public string Senha{get;set;}
         public string Email{get;set;}
+        public string DataNascimento{get;set;}
+        public string Sexo{get;set;}
     }
 }
